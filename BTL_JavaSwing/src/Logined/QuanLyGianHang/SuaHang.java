@@ -5,7 +5,9 @@
  */
 package Logined.QuanLyGianHang;
 
+import EntityClass.Hang;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -16,11 +18,15 @@ public class SuaHang extends javax.swing.JPanel {
     /**
      * Creates new form SuaHang
      */
-    public SuaHang(int page) {
+    public SuaHang(int page,Hang hangToEdit) {
         initComponents();
         this.page = page;
+        this.hangToEdit = hangToEdit;
+        showData();
     }
-
+    private int page;
+    private Hang hangToEdit;
+    private int soLuongHienTai;
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -70,6 +76,7 @@ public class SuaHang extends javax.swing.JPanel {
         add(txtMaSP, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 110, 140, -1));
 
         txtTenSP.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtTenSP.setEnabled(false);
         add(txtTenSP, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 140, 480, -1));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -80,10 +87,15 @@ public class SuaHang extends javax.swing.JPanel {
         jLabel2.setText("Đơn Vị:");
         add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 170, -1, -1));
 
+        cmbDonVi.setEditable(true);
         cmbDonVi.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cmbDonVi.setSelectedIndex(-1);
+        cmbDonVi.setEnabled(false);
         add(cmbDonVi, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 170, 230, -1));
 
+        cmbPhanLoai.setEditable(true);
         cmbPhanLoai.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cmbPhanLoai.setEnabled(false);
         add(cmbPhanLoai, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 200, 230, -1));
 
         txtGiaGoc.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -103,6 +115,11 @@ public class SuaHang extends javax.swing.JPanel {
         btnSua.setText("Sửa");
         btnSua.setToolTipText("");
         btnSua.setPreferredSize(new java.awt.Dimension(80, 28));
+        btnSua.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSuaActionPerformed(evt);
+            }
+        });
         add(btnSua, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 410, -1, -1));
 
         btnNhapLai.setBackground(new java.awt.Color(13, 138, 254));
@@ -110,6 +127,11 @@ public class SuaHang extends javax.swing.JPanel {
         btnNhapLai.setText("Nhập lại");
         btnNhapLai.setToolTipText("");
         btnNhapLai.setPreferredSize(new java.awt.Dimension(80, 28));
+        btnNhapLai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNhapLaiActionPerformed(evt);
+            }
+        });
         add(btnNhapLai, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 420, -1, -1));
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -152,7 +174,18 @@ public class SuaHang extends javax.swing.JPanel {
         });
         add(btnBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 710, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    private void showData(){
+        txtMaSP.setText(hangToEdit.getMaSP());
+        txtTenSP.setText(hangToEdit.getTenSP());
+        cmbDonVi.getEditor().setItem(hangToEdit.getDonVi());
+        cmbPhanLoai.getEditor().setItem(hangToEdit.getPhanLoai());
+        txtGiaGoc.setText(String.valueOf(hangToEdit.getGiaBan()));
+        txtKhuyenMai.setText(String.valueOf(hangToEdit.getKhuyenMai()));
+        txtViTri.setText(hangToEdit.getViTriGianHang());
+        txtSoLuong.setText(String.valueOf(hangToEdit.getSoLuongGianHang()));
+        soLuongHienTai = hangToEdit.getSoLuongGianHang();
+    }
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
         ((JLayeredPane)this.getParent()).add(new Home(page), new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 770));
@@ -160,7 +193,114 @@ public class SuaHang extends javax.swing.JPanel {
         ((JLayeredPane)this.getParent()).remove(this);
     }//GEN-LAST:event_btnBackActionPerformed
 
-    private int page;
+    private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
+        // TODO add your handling code here:
+        Hang hangToSave = Connection.ConnectHang.Instance().getHangByMaSP(txtMaSP.getText());
+        Object[] options = {"OK"};
+        try {
+            if(hangToSave.getMaSP() != null){
+                int giaGoc = Integer.parseInt(txtGiaGoc.getText());
+                float khuyenMai = Float.parseFloat(txtKhuyenMai.getText());
+                int soLuong = Integer.parseInt(txtSoLuong.getText());
+                if((soLuong - soLuongHienTai) > hangToSave.getSoLuongTonKho()){
+                    JOptionPane.showOptionDialog(null,
+                    "Số lượng cần nhập lên Gian Hang("+txtSoLuong.getText()+") > SL trong Kho ("+hangToSave.getSoLuongTonKho()+")","Thông báo",
+                    JOptionPane.PLAIN_MESSAGE,
+                    JOptionPane.ERROR_MESSAGE,
+                    null,
+                    options,
+                    options[0]);
+                return;
+                }
+                if(0.0 > khuyenMai || khuyenMai > 100.0 ){
+                    JOptionPane.showOptionDialog(null,
+                    "Nhập Khuyến Mại trong Khoảng [0-100]","Thông báo",
+                    JOptionPane.PLAIN_MESSAGE,
+                    JOptionPane.ERROR_MESSAGE,
+                    null,
+                    options,
+                    options[0]);
+                    return;
+                }
+                if(txtViTri.getText().equals("")){
+                    JOptionPane.showOptionDialog(null,
+                    "Trường Vị Trí Còn Trống !","Thông báo",
+                    JOptionPane.PLAIN_MESSAGE,
+                    JOptionPane.ERROR_MESSAGE,
+                    null,
+                    options,
+                    options[0]);
+                    return;
+                }
+                if(giaGoc - giaGoc*khuyenMai/100 < hangToSave.getGiaNhap()){
+                    System.out.println(giaGoc - giaGoc*khuyenMai/100);
+                    int result = JOptionPane.showConfirmDialog(null, "Giá Bán * Khuyến Mại("+(giaGoc - giaGoc*khuyenMai/100)+") đang nhỏ hơn Giá Nhập vào("+hangToSave.getGiaNhap()+"),\n Bạn có chắc chắn?", "Thông báo", JOptionPane.YES_NO_OPTION);
+                    if(result == JOptionPane.YES_OPTION){
+                        hangToSave.setSoLuongTonKho(hangToSave.getSoLuongTonKho() - (soLuong - soLuongHienTai));
+                        hangToSave.setViTriGianHang(txtViTri.getText());
+                        hangToSave.setGiaBan(giaGoc);
+                        hangToSave.setKhuyenMai(khuyenMai/100);//System.out.println(khuyenMai/100);
+                        hangToSave.setSoLuongGianHang(soLuong);
+                        JOptionPane.showOptionDialog(null,
+                        Connection.ConnectHang.Instance().editHangTrenGianHang(hangToSave),"Thông báo",
+                        JOptionPane.PLAIN_MESSAGE,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        options,
+                        options[0]);
+                        return;
+                    }
+                    else
+                        return;
+                }
+                //Unless have any If Case, run this
+                hangToSave.setSoLuongTonKho(hangToSave.getSoLuongTonKho() - (soLuong - soLuongHienTai));
+                hangToSave.setViTriGianHang(txtViTri.getText());
+                hangToSave.setGiaBan(giaGoc);
+                hangToSave.setKhuyenMai(khuyenMai/100);System.out.println(khuyenMai/100);
+                hangToSave.setSoLuongGianHang(soLuong);
+                JOptionPane.showOptionDialog(null,
+                Connection.ConnectHang.Instance().editHangTrenGianHang(hangToSave),"Thông báo",
+                JOptionPane.PLAIN_MESSAGE,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                options,
+                options[0]);
+            }
+            else{
+                JOptionPane.showOptionDialog(null,
+                "Không có mặt hàng mã: '" + txtMaSP.getText() + "' trong Kho !","Thông báo",
+                JOptionPane.PLAIN_MESSAGE,
+                JOptionPane.ERROR_MESSAGE,
+                null,
+                options,
+                options[0]);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showOptionDialog(null,
+            "Kiểm tra lại Giá Gốc, Khuyến Mại, Số Lượng (Phải là Số)","Thông báo",
+            JOptionPane.PLAIN_MESSAGE,
+            JOptionPane.ERROR_MESSAGE,
+            null,
+            options,
+            options[0]);
+        }catch (Exception e){
+            JOptionPane.showOptionDialog(null,
+            e,"Thông báo",
+            JOptionPane.PLAIN_MESSAGE,
+            JOptionPane.ERROR_MESSAGE,
+            null,
+            options,
+            options[0]);
+        }
+    }//GEN-LAST:event_btnSuaActionPerformed
+
+    private void btnNhapLaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNhapLaiActionPerformed
+        // TODO add your handling code here:
+        showData();
+    }//GEN-LAST:event_btnNhapLaiActionPerformed
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnNhapLai;

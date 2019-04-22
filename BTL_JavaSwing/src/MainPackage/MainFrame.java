@@ -4,11 +4,10 @@ package MainPackage;
 import Logined.LoginedPanel;
 import java.awt.Color;
 import java.awt.Component;
-import javax.swing.AbstractButton;
-import javax.swing.JLabel;
+import java.awt.Dimension;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import sun.swing.table.DefaultTableCellHeaderRenderer;
+
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -29,6 +28,7 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         initComponents();
         PaneDangNhap.setVisible(false);
+        loadData();
     }
 
     /**
@@ -56,15 +56,17 @@ public class MainFrame extends javax.swing.JFrame {
         btnRefresh = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblDanhSachSanPham = new javax.swing.JTable();
-        btnPrev = new javax.swing.JButton();
-        lblTrangHienTai = new javax.swing.JLabel();
-        btnNext = new javax.swing.JButton();
         btnHienThiPaneDangNhap = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         lbKetQua = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         lbTongSanPham = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        btnPrev = new javax.swing.JButton();
+        lblTrangHienTai = new javax.swing.JLabel();
+        btnNext = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Quản Lý Siêu Thị");
@@ -74,6 +76,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         NotLoginPanel.setBackground(new java.awt.Color(255, 255, 255));
         NotLoginPanel.setForeground(new java.awt.Color(255, 255, 255));
+        NotLoginPanel.setMinimumSize(new java.awt.Dimension(1024, 768));
         NotLoginPanel.setPreferredSize(new java.awt.Dimension(1024, 768));
         NotLoginPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -140,6 +143,11 @@ public class MainFrame extends javax.swing.JFrame {
         btnTim.setText("Tìm");
         btnTim.setMargin(new java.awt.Insets(0, 0, 0, 0));
         btnTim.setPreferredSize(new java.awt.Dimension(75, 25));
+        btnTim.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimActionPerformed(evt);
+            }
+        });
         NotLoginPanel.add(btnTim, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 170, -1, -1));
 
         btnXemKhuyenMai.setBackground(new java.awt.Color(13, 138, 254));
@@ -148,19 +156,28 @@ public class MainFrame extends javax.swing.JFrame {
         btnXemKhuyenMai.setText("Xem Khuyến Mãi");
         btnXemKhuyenMai.setMargin(new java.awt.Insets(0, 0, 0, 0));
         btnXemKhuyenMai.setPreferredSize(new java.awt.Dimension(133, 25));
+        btnXemKhuyenMai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXemKhuyenMaiActionPerformed(evt);
+            }
+        });
         NotLoginPanel.add(btnXemKhuyenMai, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 170, -1, -1));
 
         btnRefresh.setBackground(new java.awt.Color(255, 255, 255));
         btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/RoofSPM_BUTTON.png"))); // NOI18N
         btnRefresh.setMargin(new java.awt.Insets(0, 0, 0, 0));
         btnRefresh.setPreferredSize(new java.awt.Dimension(1024, 215));
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
         NotLoginPanel.add(btnRefresh, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         jScrollPane1.setPreferredSize(new java.awt.Dimension(1024, 450));
 
         tblDanhSachSanPham.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         tblDanhSachSanPham.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        tblDanhSachSanPham.setForeground(new java.awt.Color(255, 255, 255));
         tblDanhSachSanPham.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -190,36 +207,17 @@ public class MainFrame extends javax.swing.JFrame {
         ));
         tblDanhSachSanPham.setFocusable(false);
         tblDanhSachSanPham.setRowHeight(25);
+        tblDanhSachSanPham.setSelectionBackground(new java.awt.Color(0, 0, 0));
+        tblDanhSachSanPham.setSelectionForeground(new java.awt.Color(0, 0, 0));
         tblDanhSachSanPham.getTableHeader().setReorderingAllowed(false);
+        tblDanhSachSanPham.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblDanhSachSanPhamMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblDanhSachSanPham);
 
         NotLoginPanel.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 210, -1, -1));
-
-        btnPrev.setBackground(new java.awt.Color(13, 138, 254));
-        btnPrev.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnPrev.setForeground(new java.awt.Color(255, 255, 255));
-        btnPrev.setText("Prev");
-        btnPrev.setBorder(null);
-        btnPrev.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        btnPrev.setPreferredSize(new java.awt.Dimension(80, 25));
-        NotLoginPanel.add(btnPrev, new org.netbeans.lib.awtextra.AbsoluteConstraints(376, 678, -1, -1));
-
-        lblTrangHienTai.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        lblTrangHienTai.setText("Trang 0");
-        NotLoginPanel.add(lblTrangHienTai, new org.netbeans.lib.awtextra.AbsoluteConstraints(466, 683, -1, -1));
-
-        btnNext.setBackground(new java.awt.Color(13, 138, 254));
-        btnNext.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnNext.setForeground(new java.awt.Color(255, 255, 255));
-        btnNext.setText("Next");
-        btnNext.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        btnNext.setPreferredSize(new java.awt.Dimension(80, 25));
-        btnNext.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNextActionPerformed(evt);
-            }
-        });
-        NotLoginPanel.add(btnNext, new org.netbeans.lib.awtextra.AbsoluteConstraints(521, 678, -1, -1));
 
         btnHienThiPaneDangNhap.setBackground(new java.awt.Color(13, 138, 254));
         btnHienThiPaneDangNhap.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -234,33 +232,179 @@ public class MainFrame extends javax.swing.JFrame {
         });
         NotLoginPanel.add(btnHienThiPaneDangNhap, new org.netbeans.lib.awtextra.AbsoluteConstraints(806, 721, -1, -1));
 
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel2.setText("Hiển thị kết quả từ");
-        NotLoginPanel.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 710, -1, -1));
 
         lbKetQua.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lbKetQua.setText("1-20");
-        NotLoginPanel.add(lbKetQua, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 710, -1, -1));
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setText("trong tổng số");
-        NotLoginPanel.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 710, -1, -1));
 
         lbTongSanPham.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lbTongSanPham.setText("4321");
-        NotLoginPanel.add(lbTongSanPham, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 710, -1, -1));
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel6.setText("sản phẩm.");
-        NotLoginPanel.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 710, -1, -1));
 
-        Layer.add(NotLoginPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1034, 801));
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbKetQua)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbTongSanPham)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel6)
+                .addGap(0, 365, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 13, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(lbKetQua)
+                    .addComponent(jLabel4)
+                    .addComponent(lbTongSanPham)
+                    .addComponent(jLabel6)))
+        );
+
+        NotLoginPanel.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 720, 720, 30));
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+
+        btnPrev.setBackground(new java.awt.Color(13, 138, 254));
+        btnPrev.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnPrev.setForeground(new java.awt.Color(255, 255, 255));
+        btnPrev.setText("Prev");
+        btnPrev.setBorder(null);
+        btnPrev.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        btnPrev.setPreferredSize(new java.awt.Dimension(80, 25));
+        btnPrev.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrevActionPerformed(evt);
+            }
+        });
+
+        lblTrangHienTai.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lblTrangHienTai.setText("Trang 0");
+
+        btnNext.setBackground(new java.awt.Color(13, 138, 254));
+        btnNext.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnNext.setForeground(new java.awt.Color(255, 255, 255));
+        btnNext.setText("Next");
+        btnNext.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        btnNext.setPreferredSize(new java.awt.Dimension(80, 25));
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnPrev, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblTrangHienTai)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(52, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(14, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnPrev, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTrangHienTai)
+                    .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        NotLoginPanel.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 670, 290, 50));
+
+        Layer.add(NotLoginPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         getContentPane().add(Layer, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    private void loadData(){
+       TableHang table = new TableHang(Connection.ConnectHang.Instance().getDataGianHang());
+       table.setPage(currentPage - 1);
+       lbTongSanPham.setText(String.valueOf(table.getSumOfProduct()));
+       lblTrangHienTai.setText("Trang " + table.getPage());
+       lbKetQua.setText(table.getRangeOfCurrentPage());
+       currentPage = table.getPage();
+       tblDanhSachSanPham.setModel(table);
+       
+       StyleTheTable();
+    }
+    private void loadSearchData(){
+       TableHang table = new TableHang(Connection.ConnectHang.Instance().getDataSearchGuest(txtSearch.getText(), false));
+       table.setPage(currentPage - 1);
+       lbTongSanPham.setText(String.valueOf(table.getSumOfProduct()));
+       lblTrangHienTai.setText("Trang " + table.getPage());
+       lbKetQua.setText(table.getRangeOfCurrentPage());
+       currentPage = table.getPage();
+       tblDanhSachSanPham.setModel(table);
+       
+       StyleTheTable();
+    }
+    private void loadSeeDiscountData(){
+       TableHang table = new TableHang(Connection.ConnectHang.Instance().getDataSearchGuest(txtSearch.getText(), true));
+       table.setPage(currentPage - 1);
+       lbTongSanPham.setText(String.valueOf(table.getSumOfProduct()));
+       lblTrangHienTai.setText("Trang " + table.getPage());
+       lbKetQua.setText(table.getRangeOfCurrentPage());
+       currentPage = table.getPage();
+       tblDanhSachSanPham.setModel(table);
+       
+       StyleTheTable();
+    }
+    private void StyleTheTable(){
+        //Change Header Color
+        DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer();
+        Color darkerLightBlue = new Color(13, 138, 254);
+        headerRenderer.setBackground(darkerLightBlue);
+        headerRenderer.setForeground(Color.WHITE);
+        headerRenderer.setPreferredSize(new Dimension(WIDTH, 30));
+        for (int i = 0; i < tblDanhSachSanPham.getColumnCount(); i++) {
+            tblDanhSachSanPham.getColumnModel().getColumn(i).setHeaderRenderer(headerRenderer);
+        }
+        //Change Row Color
+        tblDanhSachSanPham.setDefaultRenderer(Object.class, new DefaultTableCellRenderer()
+        {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
+            {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                Color lightBlue = new Color(189,215,238);
+                Color darkerLightBlue = new Color(13, 138, 254);
+                c.setBackground(row % 2 == 0 ? lightBlue : Color.WHITE);
+                if (isSelected) {
+                    c.setBackground(darkerLightBlue);
+                    c.setForeground(Color.white);
+                }
+                else {
+                    c.setForeground(Color.BLACK);
+                }
+                return c;
+            }
+        });
+    }
     private void btnHienThiPaneDangNhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHienThiPaneDangNhapActionPerformed
         // TODO add your handling code here:
         PaneDangNhap.setVisible(true);
@@ -297,8 +441,54 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
         // TODO add your handling code here:
-
+        currentPage++;
+        if(isSearching)
+            loadSearchData();
+        else if(isSeeingDiscount)
+            loadSeeDiscountData();
+        else
+            loadData();
     }//GEN-LAST:event_btnNextActionPerformed
+
+    private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevActionPerformed
+        // TODO add your handling code here:
+        currentPage--;
+        if(isSearching)
+            loadSearchData();
+        else if(isSeeingDiscount)
+            loadSeeDiscountData();
+        else
+            loadData();
+    }//GEN-LAST:event_btnPrevActionPerformed
+
+    private void tblDanhSachSanPhamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDanhSachSanPhamMouseClicked
+        // TODO add your handling code here:
+ 
+    }//GEN-LAST:event_tblDanhSachSanPhamMouseClicked
+
+    private void btnTimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimActionPerformed
+        // TODO add your handling code here:
+       isSearching = true;
+       isSeeingDiscount = false;
+       currentPage = 1;
+       loadSearchData();
+    }//GEN-LAST:event_btnTimActionPerformed
+
+    private void btnXemKhuyenMaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXemKhuyenMaiActionPerformed
+        // TODO add your handling code here:
+       isSeeingDiscount = true;
+       isSearching = false;
+       currentPage = 1;
+       loadSeeDiscountData();
+    }//GEN-LAST:event_btnXemKhuyenMaiActionPerformed
+
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        // TODO add your handling code here:
+        currentPage = 1;
+        loadData();
+        isSearching = false;
+        isSeeingDiscount = false;
+    }//GEN-LAST:event_btnRefreshActionPerformed
 
     /**
      * @param args the command line arguments
@@ -338,6 +528,8 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
     }
+    private boolean isSearching = false,isSeeingDiscount = false;
+    private int currentPage = 1;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLayeredPane Layer;
     private javax.swing.JPanel NotLoginPanel;
@@ -356,6 +548,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbKetQua;
     private javax.swing.JLabel lbTongSanPham;

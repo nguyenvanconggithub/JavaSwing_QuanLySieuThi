@@ -5,7 +5,9 @@
  */
 package Logined.QuanLyGianHang;
 
+import EntityClass.Hang;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -99,6 +101,7 @@ public class ThemHang extends javax.swing.JPanel {
         add(txtKhuyenMai, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 260, 100, -1));
 
         txtTenSP.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtTenSP.setEnabled(false);
         add(txtTenSP, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 140, 480, -1));
 
         txtViTri.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -108,12 +111,22 @@ public class ThemHang extends javax.swing.JPanel {
         add(txtSoLuong, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 320, 140, -1));
 
         txtMaSP.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtMaSP.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txtMaSPCaretUpdate(evt);
+            }
+        });
         add(txtMaSP, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 110, 140, -1));
 
+        txtPhanLoai.setEditable(true);
         txtPhanLoai.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtPhanLoai.setEnabled(false);
         add(txtPhanLoai, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 200, 230, -1));
 
+        txtDonVi.setEditable(true);
         txtDonVi.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtDonVi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "Test", "Test2" }));
+        txtDonVi.setEnabled(false);
         add(txtDonVi, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 170, 230, -1));
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -129,6 +142,11 @@ public class ThemHang extends javax.swing.JPanel {
         btnNhapLai.setText("Nhập lại");
         btnNhapLai.setToolTipText("");
         btnNhapLai.setPreferredSize(new java.awt.Dimension(80, 28));
+        btnNhapLai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNhapLaiActionPerformed(evt);
+            }
+        });
         add(btnNhapLai, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 410, -1, -1));
 
         btnBack.setBackground(new java.awt.Color(234, 107, 72));
@@ -148,6 +166,11 @@ public class ThemHang extends javax.swing.JPanel {
         btnThem.setText("Thêm");
         btnThem.setToolTipText("");
         btnThem.setPreferredSize(new java.awt.Dimension(80, 28));
+        btnThem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemActionPerformed(evt);
+            }
+        });
         add(btnThem, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 410, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
@@ -158,6 +181,133 @@ public class ThemHang extends javax.swing.JPanel {
         ((JLayeredPane)this.getParent()).remove(this);
     }//GEN-LAST:event_btnBackActionPerformed
 
+    private void btnNhapLaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNhapLaiActionPerformed
+        // TODO add your handling code here:
+        txtMaSP.setText("");
+        txtTenSP.setText("");
+        txtDonVi.setSelectedItem("");
+        txtPhanLoai.setSelectedItem("");
+        txtGiaGoc.setText("");
+        txtKhuyenMai.setText("");
+        txtViTri.setText("");
+        txtSoLuong.setText("");
+    }//GEN-LAST:event_btnNhapLaiActionPerformed
+
+    private void txtMaSPCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtMaSPCaretUpdate
+        // TODO add your handling code here:
+        Hang hangMatchMaSP = Connection.ConnectHang.Instance().getHangChuaLenGianHangByMaSP(txtMaSP.getText());
+        txtTenSP.setText(hangMatchMaSP.getTenSP());
+        txtDonVi.setSelectedItem(hangMatchMaSP.getDonVi());
+        txtPhanLoai.setSelectedItem(hangMatchMaSP.getPhanLoai());
+        txtGiaGoc.setText("");
+        txtKhuyenMai.setText("");
+        txtViTri.setText("");
+        txtSoLuong.setText("");
+    }//GEN-LAST:event_txtMaSPCaretUpdate
+
+    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
+        // TODO add your handling code here:
+        Hang hangToAdd = Connection.ConnectHang.Instance().getHangChuaLenGianHangByMaSP(txtMaSP.getText());
+        Object[] options = {"OK"};
+        try {
+            if(hangToAdd.getMaSP() != null){
+                int giaGoc = Integer.parseInt(txtGiaGoc.getText());
+                float khuyenMai = Float.parseFloat(txtKhuyenMai.getText());
+                int soLuong = Integer.parseInt(txtSoLuong.getText());
+                if( soLuong > hangToAdd.getSoLuongTonKho()){
+                    JOptionPane.showOptionDialog(null,
+                    "Số lượng cần nhập lên Gian Hang("+txtSoLuong.getText()+") > SL trong Kho ("+hangToAdd.getSoLuongTonKho()+")","Thông báo",
+                    JOptionPane.PLAIN_MESSAGE,
+                    JOptionPane.ERROR_MESSAGE,
+                    null,
+                    options,
+                    options[0]);
+                return;
+                }
+                if(0.0 > khuyenMai || khuyenMai > 100.0 ){
+                    JOptionPane.showOptionDialog(null,
+                    "Nhập Khuyến Mại trong Khoảng [0-100]","Thông báo",
+                    JOptionPane.PLAIN_MESSAGE,
+                    JOptionPane.ERROR_MESSAGE,
+                    null,
+                    options,
+                    options[0]);
+                    return;
+                }
+                if(txtViTri.getText().equals("")){
+                    JOptionPane.showOptionDialog(null,
+                    "Trường Vị Trí Còn Trống !","Thông báo",
+                    JOptionPane.PLAIN_MESSAGE,
+                    JOptionPane.ERROR_MESSAGE,
+                    null,
+                    options,
+                    options[0]);
+                    return;
+                }
+                if(giaGoc - giaGoc*khuyenMai/100 < hangToAdd.getGiaNhap()){
+                    System.out.println(giaGoc - giaGoc*khuyenMai/100);
+                    int result = JOptionPane.showConfirmDialog(null, "Giá Bán * Khuyến Mại("+(giaGoc - giaGoc*khuyenMai/100)+") đang nhỏ hơn Giá Nhập vào("+hangToAdd.getGiaNhap()+"),\n Bạn có chắc chắn?", "Thông báo", JOptionPane.YES_NO_OPTION);
+                    if(result == JOptionPane.YES_OPTION){
+                        hangToAdd.setSoLuongTonKho(hangToAdd.getSoLuongTonKho() - soLuong);
+                        hangToAdd.setViTriGianHang(txtViTri.getText());
+                        hangToAdd.setGiaBan(giaGoc);
+                        hangToAdd.setKhuyenMai(khuyenMai/100);System.out.println(khuyenMai/100);
+                        hangToAdd.setSoLuongGianHang(soLuong);
+                        JOptionPane.showOptionDialog(null,
+                        Connection.ConnectHang.Instance().addHangTuKhoLenGianHang(hangToAdd),"Thông báo",
+                        JOptionPane.PLAIN_MESSAGE,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        options,
+                        options[0]);
+                        return;
+                    }
+                    else
+                        return;
+                }
+                //Unless have any If Case, run this
+                hangToAdd.setSoLuongTonKho(hangToAdd.getSoLuongTonKho() - soLuong);
+                hangToAdd.setViTriGianHang(txtViTri.getText());
+                hangToAdd.setGiaBan(giaGoc);
+                hangToAdd.setKhuyenMai(khuyenMai/100);System.out.println(khuyenMai/100);
+                hangToAdd.setSoLuongGianHang(soLuong);
+                JOptionPane.showOptionDialog(null,
+                Connection.ConnectHang.Instance().addHangTuKhoLenGianHang(hangToAdd),"Thông báo",
+                JOptionPane.PLAIN_MESSAGE,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                options,
+                options[0]);
+            }
+            else{
+                JOptionPane.showOptionDialog(null,
+                "Không có mặt hàng mã: '" + txtMaSP.getText() + "' trong Kho !","Thông báo",
+                JOptionPane.PLAIN_MESSAGE,
+                JOptionPane.ERROR_MESSAGE,
+                null,
+                options,
+                options[0]);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showOptionDialog(null,
+            "Kiểm tra lại Giá Gốc, Khuyến Mại, Số Lượng (Phải là Số)","Thông báo",
+            JOptionPane.PLAIN_MESSAGE,
+            JOptionPane.ERROR_MESSAGE,
+            null,
+            options,
+            options[0]);
+        }catch (Exception e){
+            JOptionPane.showOptionDialog(null,
+            e,"Thông báo",
+            JOptionPane.PLAIN_MESSAGE,
+            JOptionPane.ERROR_MESSAGE,
+            null,
+            options,
+            options[0]);
+        }
+ 
+    }//GEN-LAST:event_btnThemActionPerformed
+   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnNhapLai;

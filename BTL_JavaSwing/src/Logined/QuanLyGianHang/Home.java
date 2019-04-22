@@ -5,7 +5,15 @@
  */
 package Logined.QuanLyGianHang;
 
+import EntityClass.Hang;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import static java.awt.image.ImageObserver.WIDTH;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  *
@@ -18,11 +26,12 @@ public class Home extends javax.swing.JPanel {
      */
     public Home(int page) {
         initComponents();
-        curentPage = page;
-        lblTrangHienTai.setText("Trang " + String.valueOf(curentPage));
+        currentPage = page;
+        loadData();
     }
     public Home(){
         initComponents();
+        loadData();
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -80,6 +89,11 @@ public class Home extends javax.swing.JPanel {
         btnPrev.setBorder(null);
         btnPrev.setMargin(new java.awt.Insets(0, 0, 0, 0));
         btnPrev.setPreferredSize(new java.awt.Dimension(80, 25));
+        btnPrev.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrevActionPerformed(evt);
+            }
+        });
         add(btnPrev, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 720, -1, -1));
 
         lblTrangHienTai.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -145,6 +159,11 @@ public class Home extends javax.swing.JPanel {
         btnTim.setText("Tìm");
         btnTim.setMargin(new java.awt.Insets(0, 0, 0, 0));
         btnTim.setPreferredSize(new java.awt.Dimension(75, 25));
+        btnTim.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimActionPerformed(evt);
+            }
+        });
         add(btnTim, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 80, -1, -1));
 
         btnSua.setBackground(new java.awt.Color(13, 138, 254));
@@ -160,6 +179,11 @@ public class Home extends javax.swing.JPanel {
         btnXoa.setBackground(new java.awt.Color(234, 107, 72));
         btnXoa.setText("Xóa Hàng");
         btnXoa.setPreferredSize(new java.awt.Dimension(100, 28));
+        btnXoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXoaActionPerformed(evt);
+            }
+        });
         add(btnXoa, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 120, -1, -1));
 
         btnThem.setBackground(new java.awt.Color(13, 138, 254));
@@ -172,16 +196,71 @@ public class Home extends javax.swing.JPanel {
         });
         add(btnThem, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 120, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
-
+    private void loadData(){
+       TableQuanLyHang table = new TableQuanLyHang(Connection.ConnectHang.Instance().getDataGianHang());
+       table.setPage(currentPage - 1);
+       lbTongSanPham.setText(String.valueOf(table.getSumOfProduct()));
+       lblTrangHienTai.setText("Trang " + table.getPage());
+       lbKetQua.setText(table.getRangeOfCurrentPage());
+       currentPage = table.getPage();
+       tblDanhSachSanPham.setModel(table);
+       
+       StyleTheTable();
+    }
+    private void loadSearchData(){
+       TableQuanLyHang table = new TableQuanLyHang(Connection.ConnectHang.Instance().getDataSearchManager(txtSearch.getText()));
+       table.setPage(currentPage - 1);
+       lbTongSanPham.setText(String.valueOf(table.getSumOfProduct()));
+       lblTrangHienTai.setText("Trang " + table.getPage());
+       lbKetQua.setText(table.getRangeOfCurrentPage());
+       currentPage = table.getPage();
+       tblDanhSachSanPham.setModel(table);
+       
+       StyleTheTable();
+    }
+    private void StyleTheTable(){
+        //Change Header Color
+        DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer();
+        Color darkerLightBlue = new Color(13, 138, 254);
+        headerRenderer.setBackground(darkerLightBlue);
+        headerRenderer.setForeground(Color.WHITE);
+        headerRenderer.setPreferredSize(new Dimension(WIDTH, 30));
+        for (int i = 0; i < tblDanhSachSanPham.getColumnCount(); i++) {
+            tblDanhSachSanPham.getColumnModel().getColumn(i).setHeaderRenderer(headerRenderer);
+        }
+        //Change Row Color
+        tblDanhSachSanPham.setDefaultRenderer(Object.class, new DefaultTableCellRenderer()
+        {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
+            {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                Color lightBlue = new Color(189,215,238);
+                Color darkerLightBlue = new Color(13, 138, 254);
+                c.setBackground(row % 2 == 0 ? lightBlue : Color.WHITE);
+                if (isSelected) {
+                    c.setBackground(darkerLightBlue);
+                    c.setForeground(Color.white);
+                }
+                else {
+                    c.setForeground(Color.BLACK);
+                }
+                return c;
+            }
+        });
+    }
     private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
         // TODO add your handling code here:
-        curentPage++;
-        lblTrangHienTai.setText("Trang " + String.valueOf(curentPage));
+        currentPage++;
+        if(isSearching)
+            loadSearchData();
+        else
+            loadData();
     }//GEN-LAST:event_btnNextActionPerformed
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         // TODO add your handling code here:
-        ((JLayeredPane)this.getParent()).add(new ThemHang(curentPage), new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 760, 770));
+        ((JLayeredPane)this.getParent()).add(new ThemHang(currentPage), new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 760, 770));
         this.setVisible(false);
         ((JLayeredPane)this.getParent()).remove(this);
         //((JLayeredPane)this.getParent()).
@@ -190,12 +269,76 @@ public class Home extends javax.swing.JPanel {
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
         // TODO add your handling code here:
-        ((JLayeredPane)this.getParent()).add(new SuaHang(curentPage), new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 760, 770));
-        this.setVisible(false);
-        ((JLayeredPane)this.getParent()).remove(this);
+        int selectedRow = tblDanhSachSanPham.getSelectedRow();
+        if(selectedRow == -1){
+            Object[] options = {"OK"};
+            JOptionPane.showOptionDialog(null,
+            "Hãy chọn sản phẩm để sửa !","Thông báo",
+            JOptionPane.PLAIN_MESSAGE,
+            JOptionPane.ERROR_MESSAGE,
+            null,
+            options,
+            options[0]);
+        }
+        else {
+            Hang selectedProduct = new Hang();
+            selectedProduct.setMaSP(tblDanhSachSanPham.getValueAt(selectedRow, 0).toString());
+            selectedProduct.setTenSP(tblDanhSachSanPham.getValueAt(selectedRow, 1).toString());
+            selectedProduct.setDonVi(tblDanhSachSanPham.getValueAt(selectedRow, 2).toString());
+            selectedProduct.setPhanLoai(tblDanhSachSanPham.getValueAt(selectedRow, 3).toString());
+            selectedProduct.setGiaBan((int)tblDanhSachSanPham.getValueAt(selectedRow, 4));
+            selectedProduct.setKhuyenMai((int)tblDanhSachSanPham.getValueAt(selectedRow, 5));
+            selectedProduct.setViTriGianHang(tblDanhSachSanPham.getValueAt(selectedRow, 7).toString());
+            selectedProduct.setSoLuongGianHang((int)tblDanhSachSanPham.getValueAt(selectedRow, 8));
+
+            ((JLayeredPane)this.getParent()).add(new SuaHang(currentPage,selectedProduct), new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 760, 770));
+            this.setVisible(false);
+            ((JLayeredPane)this.getParent()).remove(this);
+        }
+
     }//GEN-LAST:event_btnSuaActionPerformed
 
-    private int curentPage = 0;
+    private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevActionPerformed
+        // TODO add your handling code here:
+        currentPage--;
+        if(isSearching)
+            loadSearchData();
+        else
+            loadData();
+    }//GEN-LAST:event_btnPrevActionPerformed
+
+    private void btnTimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimActionPerformed
+        // TODO add your handling code here:
+        isSearching = true;
+        currentPage = 1;
+        loadSearchData();
+    }//GEN-LAST:event_btnTimActionPerformed
+
+    private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = tblDanhSachSanPham.getSelectedRow();
+        int result = JOptionPane.showConfirmDialog(null,"Bạn có chắc chắn xóa?", "Thông báo", JOptionPane.YES_NO_OPTION);
+        if(result == JOptionPane.YES_OPTION){
+            Object[] options = {"OK"};
+            JOptionPane.showOptionDialog(null,
+            Connection.ConnectHang.Instance().deleteHangbyMaSP(tblDanhSachSanPham.getValueAt(selectedRow,0).toString()),"Thông báo",
+            JOptionPane.PLAIN_MESSAGE,
+            JOptionPane.ERROR_MESSAGE,
+            null,
+            options,
+            options[0]);
+            if(isSearching){
+                loadSearchData();
+            }
+            else{
+                loadData();
+            }
+        }
+
+        
+    }//GEN-LAST:event_btnXoaActionPerformed
+    private boolean isSearching = false;
+    private int currentPage = 1;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnPrev;
