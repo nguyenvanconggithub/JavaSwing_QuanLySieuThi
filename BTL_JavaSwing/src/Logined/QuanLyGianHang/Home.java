@@ -85,7 +85,7 @@ public class Home extends javax.swing.JPanel {
         btnPrev.setBackground(new java.awt.Color(13, 138, 254));
         btnPrev.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnPrev.setForeground(new java.awt.Color(255, 255, 255));
-        btnPrev.setText("Prev");
+        btnPrev.setText("Trang trước");
         btnPrev.setBorder(null);
         btnPrev.setMargin(new java.awt.Insets(0, 0, 0, 0));
         btnPrev.setPreferredSize(new java.awt.Dimension(80, 25));
@@ -103,8 +103,11 @@ public class Home extends javax.swing.JPanel {
         btnNext.setBackground(new java.awt.Color(13, 138, 254));
         btnNext.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnNext.setForeground(new java.awt.Color(255, 255, 255));
-        btnNext.setText("Next");
+        btnNext.setText("Trang sau");
+        btnNext.setBorder(null);
         btnNext.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        btnNext.setMaximumSize(new java.awt.Dimension(75, 17));
+        btnNext.setMinimumSize(new java.awt.Dimension(75, 17));
         btnNext.setPreferredSize(new java.awt.Dimension(80, 25));
         btnNext.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
